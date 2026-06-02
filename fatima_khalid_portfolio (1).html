@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fatima Khalid — ML Engineer & Software Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --cream:#f8f5f0;
+  --warm:#fdfcfa;
+  --ink:#18150f;
+  --ink2:#3a342a;
+  --muted:#918b82;
+  --muted2:#bab4ac;
+  --sage:#6b9e8a;
+  --sage2:#9ac4b2;
+  --blush:#c49a8c;
+  --blush2:#e4ccc5;
+  --sand:#cdb896;
+  --sand2:#e8dac8;
+  --border:rgba(24,21,15,.07);
+  --border2:rgba(24,21,15,.13);
+  --sh:0 4px 40px rgba(24,21,15,.05);
+  --shh:0 16px 60px rgba(24,21,15,.11);
+}
+
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);overflow-x:hidden;line-height:1.6}
+
+/* ─── CURSOR ─── */
+#cur,#cur2{position:fixed;pointer-events:none;border-radius:50%;z-index:9999;transform:translate(-50%,-50%)}
+#cur{width:7px;height:7px;background:var(--ink);transition:opacity .2s}
+#cur2{width:30px;height:30px;border:1.5px solid rgba(24,21,15,.25);transition:left .35s cubic-bezier(.23,1,.32,1),top .35s cubic-bezier(.23,1,.32,1),width .3s,height .3s,border-color .3s}
+body:has(a:hover) #cur2,body:has(button:hover) #cur2{width:44px;height:44px;border-color:var(--sage)}
+
+/* ─── PROGRESS ─── */
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--sage),var(--blush));z-index:200;width:0;transition:width .1s linear}
+
+/* ─── CANVAS BG ─── */
+#bg-canvas{position:fixed;inset:0;z-index:0;opacity:.55;pointer-events:none}
+
+/* ─── NAV ─── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 56px;display:flex;align-items:center;justify-content:space-between;background:rgba(248,245,240,.85);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'DM Serif Display',serif;font-size:1.15rem;color:var(--ink);text-decoration:none;letter-spacing:.01em}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{font-size:.78rem;font-weight:500;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--sage);transition:width .3s ease}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a:hover::after{width:100%}
+
+/* ─── HERO ─── */
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:110px 56px 70px;gap:56px;position:relative;z-index:1}
+.hero-tag{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--sage);letter-spacing:.13em;text-transform:uppercase;margin-bottom:18px;opacity:0;animation:fadeUp .8s ease .2s forwards}
+.hero-name{font-family:'DM Serif Display',serif;font-size:clamp(2.8rem,4.8vw,4.6rem);line-height:1.04;color:var(--ink);margin-bottom:10px;opacity:0;animation:fadeUp .9s ease .35s forwards}
+.hero-name em{font-style:italic;color:var(--blush)}
+.hero-sub{font-size:1rem;color:var(--muted);margin-bottom:24px;opacity:0;animation:fadeUp .9s ease .5s forwards}
+.hero-bio{font-size:.95rem;color:var(--ink2);line-height:1.78;max-width:470px;margin-bottom:40px;opacity:0;animation:fadeUp .9s ease .62s forwards}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;opacity:0;animation:fadeUp .9s ease .76s forwards}
+.btn-a{display:inline-block;padding:12px 30px;background:var(--ink);color:var(--cream);font-size:.82rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;border-radius:4px;transition:background .25s,transform .25s,box-shadow .25s}
+.btn-a:hover{background:var(--ink2);transform:translateY(-2px);box-shadow:0 8px 28px rgba(24,21,15,.18)}
+.btn-b{display:inline-block;padding:12px 30px;border:1px solid var(--border2);color:var(--ink);font-size:.82rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;border-radius:4px;transition:border-color .25s,background .25s,transform .25s}
+.btn-b:hover{border-color:var(--sage);background:rgba(107,158,138,.06);transform:translateY(-2px)}
+
+.hero-right{opacity:0;animation:fadeIn 1.2s ease .9s forwards}
+.hcard{background:var(--warm);border:1px solid var(--border);border-radius:16px;padding:36px;box-shadow:var(--sh)}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.stat{padding:18px;background:var(--cream);border-radius:10px;border:1px solid var(--border)}
+.stat-v{font-family:'DM Serif Display',serif;font-size:1.9rem;color:var(--ink);display:block;line-height:1;margin-bottom:3px}
+.stat-l{font-size:.74rem;color:var(--muted);letter-spacing:.03em}
+.ttags{display:flex;flex-wrap:wrap;gap:7px}
+.ttag{font-family:'JetBrains Mono',monospace;font-size:.68rem;padding:5px 11px;background:var(--sand2);color:var(--ink2);border-radius:50px;border:1px solid var(--sand);letter-spacing:.02em}
+
+/* ─── SECTIONS ─── */
+section{padding:90px 56px;position:relative;z-index:1}
+.sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:52px}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted2);letter-spacing:.08em}
+.sec-title{font-family:'DM Serif Display',serif;font-size:clamp(1.9rem,3.2vw,2.7rem);color:var(--ink);line-height:1.1}
+.sec-line{flex:1;height:1px;background:var(--border);margin-left:16px}
+
+/* ─── EDUCATION ─── */
+#education{background:var(--warm)}
+.edu-card{display:flex;justify-content:space-between;align-items:flex-start;padding:44px;background:var(--cream);border:1px solid var(--border);border-radius:16px;box-shadow:var(--sh);gap:40px;flex-wrap:wrap;opacity:0;transform:translateY(24px);transition:box-shadow .3s}
+.edu-card.visible{animation:fadeUp .7s ease forwards}
+.edu-card:hover{box-shadow:var(--shh)}
+.edu-deg{font-family:'DM Serif Display',serif;font-size:1.75rem;color:var(--ink);margin-bottom:5px}
+.edu-uni{font-size:.95rem;color:var(--muted);margin-bottom:20px}
+.edu-courses{display:flex;flex-wrap:wrap;gap:8px}
+.ctag{font-size:.78rem;padding:5px 13px;background:var(--sand2);border:1px solid var(--sand);border-radius:50px;color:var(--ink2)}
+.edu-period{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--muted);white-space:nowrap;text-align:right;padding-top:4px}
+.edu-period span{display:block;margin-top:6px;font-size:.68rem;color:rgba(145,139,130,.5)}
+
+/* ─── PROJECTS ─── */
+#projects{background:var(--cream)}
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:22px}
+.pcard{background:var(--warm);border:1px solid var(--border);border-radius:12px;padding:34px;position:relative;overflow:hidden;opacity:0;transform:translateY(30px);transition:transform .35s cubic-bezier(.23,1,.32,1),box-shadow .35s,border-color .35s}
+.pcard.visible{animation:cardUp .7s cubic-bezier(.23,1,.32,1) forwards}
+.pcard:hover{transform:translateY(-6px);box-shadow:var(--shh);border-color:var(--sage2)}
+.pacc{position:absolute;top:0;left:0;right:0;height:3px}
+.acc-sage{background:linear-gradient(90deg,var(--sage),var(--sage2))}
+.acc-blush{background:linear-gradient(90deg,var(--blush),var(--blush2))}
+.acc-sand{background:linear-gradient(90deg,var(--sand),var(--sand2))}
+.plabel{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:11px}
+.ptitle{font-family:'DM Serif Display',serif;font-size:1.38rem;color:var(--ink);line-height:1.2;margin-bottom:12px}
+.pdesc{font-size:.88rem;color:var(--ink2);line-height:1.72;margin-bottom:18px}
+.pmetrics{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
+.mpill{font-family:'JetBrains Mono',monospace;font-size:.68rem;padding:4px 11px;border-radius:50px;font-weight:500}
+.mg{background:rgba(107,158,138,.1);color:var(--sage);border:1px solid rgba(107,158,138,.18)}
+.mw{background:rgba(196,154,140,.1);color:var(--blush);border:1px solid rgba(196,154,140,.18)}
+.parch{margin-bottom:12px}
+.parch-label{font-size:.75rem;color:var(--muted);margin-bottom:6px;font-family:'JetBrains Mono',monospace;letter-spacing:.05em}
+.parch-text{font-size:.86rem;color:var(--ink2);line-height:1.65}
+.pstack{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px}
+.stag{font-size:.73rem;padding:3px 9px;background:var(--cream);color:var(--muted);border:1px solid var(--border);border-radius:4px}
+.plink{font-size:.8rem;font-weight:500;color:var(--ink);text-decoration:none;letter-spacing:.04em;display:inline-flex;align-items:center;gap:6px;border-bottom:1px solid var(--border2);padding-bottom:2px;transition:border-color .25s,color .25s}
+.plink:hover{color:var(--sage);border-color:var(--sage)}
+.plink::after{content:'→';transition:transform .25s ease}
+.plink:hover::after{transform:translateX(4px)}
+
+/* ─── SKILLS ─── */
+#skills{background:var(--warm)}
+.skills-layout{display:grid;grid-template-columns:1fr 1fr;gap:44px}
+.scat{opacity:0;transform:translateY(20px)}
+.scat.visible{animation:fadeUp .65s ease forwards}
+.scat-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.scat-label::after{content:'';flex:1;height:1px;background:rgba(107,158,138,.18)}
+.skill-list{display:flex;flex-wrap:wrap;gap:8px}
+.schip{font-size:.84rem;padding:8px 15px;background:var(--cream);border:1px solid var(--border);border-radius:6px;color:var(--ink2);transition:background .25s,border-color .25s,transform .25s;cursor:default}
+.schip:hover{background:var(--sand2);border-color:var(--sand);transform:translateY(-2px)}
+
+/* ─── LEADERSHIP ─── */
+#leadership{background:var(--cream)}
+.lc-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.lcard{padding:34px;background:var(--warm);border:1px solid var(--border);border-radius:12px;opacity:0;transform:translateY(20px);transition:box-shadow .3s,border-color .3s}
+.lcard.visible{animation:fadeUp .7s ease forwards}
+.lcard:hover{box-shadow:var(--shh);border-color:var(--blush2)}
+.lorg{font-family:'DM Serif Display',serif;font-size:1.18rem;color:var(--ink);margin-bottom:3px}
+.lrole{font-size:.8rem;color:var(--sage);font-weight:500;letter-spacing:.04em;margin-bottom:3px}
+.lperiod{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);margin-bottom:16px}
+.lpts{list-style:none;display:flex;flex-direction:column;gap:9px}
+.lpts li{font-size:.86rem;color:var(--ink2);line-height:1.62;padding-left:15px;position:relative}
+.lpts li::before{content:'';position:absolute;left:0;top:9px;width:4px;height:4px;border-radius:50%;background:var(--blush)}
+
+/* ─── CONTACT ─── */
+#contact{background:var(--ink);color:var(--cream);text-align:center;padding:100px 56px}
+#contact .sec-title{color:var(--cream)}
+#contact .sec-num{color:rgba(248,245,240,.25)}
+#contact .sec-line{background:rgba(248,245,240,.08)}
+#contact .sec-head{justify-content:center;flex-direction:column;align-items:center;gap:6px}
+.c-tagline{font-family:'DM Serif Display',serif;font-size:clamp(1.5rem,2.8vw,2.2rem);color:var(--cream);font-style:italic;margin-bottom:14px;opacity:.9}
+.c-sub{font-size:.95rem;color:rgba(248,245,240,.5);margin-bottom:48px;max-width:440px;margin-left:auto;margin-right:auto}
+.c-links{display:flex;justify-content:center;flex-wrap:wrap;gap:14px;margin-bottom:52px}
+.cbtn{display:inline-flex;align-items:center;gap:9px;padding:13px 26px;border:1px solid rgba(248,245,240,.16);color:var(--cream);text-decoration:none;font-size:.82rem;font-weight:500;letter-spacing:.05em;border-radius:6px;transition:background .25s,border-color .25s,transform .25s}
+.cbtn:hover{background:rgba(248,245,240,.07);border-color:var(--sage2);transform:translateY(-2px)}
+.c-email{font-family:'DM Serif Display',serif;font-size:clamp(1.1rem,2.3vw,1.7rem);color:var(--sage2);text-decoration:none;transition:color .25s}
+.c-email:hover{color:var(--blush2)}
+
+/* ─── FOOTER ─── */
+footer{background:var(--ink);padding:20px 56px;border-top:1px solid rgba(248,245,240,.05);display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
+.ftext{font-size:.74rem;color:rgba(248,245,240,.25);font-family:'JetBrains Mono',monospace}
+
+/* ─── KEYFRAMES ─── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes cardUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:900px){
+  nav{padding:14px 20px}
+  .nav-links{display:none}
+  section{padding:60px 20px}
+  .hero{grid-template-columns:1fr;padding:90px 20px 50px}
+  .hero-right{display:none}
+  .skills-layout,.lc-grid{grid-template-columns:1fr}
+  .edu-card{padding:24px}
+  footer{flex-direction:column;gap:6px;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- animated background canvas -->
+<canvas id="bg-canvas"></canvas>
+
+<div id="cur"></div>
+<div id="cur2"></div>
+<div id="prog"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">FK</a>
+  <ul class="nav-links">
+    <li><a href="#education">Education</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#leadership">Leadership</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-content">
+    <p class="hero-tag">Software Engineer &nbsp;·&nbsp; ML Developer</p>
+    <h1 class="hero-name">Fatima<br><em>Khalid</em></h1>
+    <p class="hero-sub">COMSATS University · 6th Semester · Lahore, Pakistan</p>
+    <p class="hero-bio">Building end-to-end machine learning pipelines, production-grade automation systems, and full-stack web applications. Passionate about data, systems that scale, and clean engineering. Seeking a DS/ML internship to contribute to model development and data pipelines.</p>
+    <div class="hero-btns">
+      <a href="mailto:fatimakhalidddd0@gmail.com" class="btn-a">Get In Touch</a>
+      <a href="https://github.com/Fatima-Khalidd" target="_blank" class="btn-b">View GitHub</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hcard">
+      <div class="stat-grid">
+        <div class="stat"><span class="stat-v">94.6%</span><span class="stat-l">ML Model Accuracy</span></div>
+        <div class="stat"><span class="stat-v">2,401</span><span class="stat-l">Trading Days Analysed</span></div>
+        <div class="stat"><span class="stat-v">10+</span><span class="stat-l">Technical Indicators</span></div>
+        <div class="stat"><span class="stat-v">3</span><span class="stat-l">Production Projects</span></div>
+      </div>
+      <div class="ttags">
+        <span class="ttag">Python</span><span class="ttag">scikit-learn</span><span class="ttag">TensorFlow</span>
+        <span class="ttag">Selenium</span><span class="ttag">Next.js</span><span class="ttag">MongoDB</span>
+        <span class="ttag">SQL</span><span class="ttag">n8n</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="sec-head">
+    <span class="sec-num">01</span>
+    <h2 class="sec-title">Education</h2>
+    <div class="sec-line"></div>
+  </div>
+  <div class="edu-card">
+    <div>
+      <h3 class="edu-deg">BSc Software Engineering</h3>
+      <p class="edu-uni">COMSATS University Islamabad, Lahore Campus</p>
+      <div class="edu-courses">
+        <span class="ctag">Artificial Intelligence</span>
+        <span class="ctag">Data Structures &amp; Algorithms</span>
+        <span class="ctag">Database Systems</span>
+        <span class="ctag">OOP</span>
+        <span class="ctag">Discrete Structures</span>
+        <span class="ctag">Pattern Recognition</span>
+        <span class="ctag">Data Science Fundamentals</span>
+      </div>
+    </div>
+    <div class="edu-period">Sep 2023 – Jun 2027<span>6th Semester</span></div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="sec-head">
+    <span class="sec-num">02</span>
+    <h2 class="sec-title">Projects</h2>
+    <div class="sec-line"></div>
+  </div>
+  <div class="proj-grid">
+
+    <div class="pcard">
+      <div class="pacc acc-sage"></div>
+      <p class="plabel">Academic · ML Pipeline</p>
+      <h3 class="ptitle">Tesla Stock Price Analysis &amp; Prediction</h3>
+      <p class="pdesc">End-to-end ML pipeline spanning 2,401 trading days (2016–2025). Covers EDA, 10+ engineered technical indicators, IQR outlier removal, normalisation, and four model benchmarks.</p>
+      <div class="pmetrics">
+        <span class="mpill mg">94.6% RF Accuracy</span>
+        <span class="mpill mg">93.5% CV Score</span>
+        <span class="mpill mw">ATR 62.3% Feature Importance</span>
+        <span class="mpill mw">MACD 21.3%</span>
+      </div>
+      <div class="parch">
+        <p class="parch-label">Models Benchmarked</p>
+        <p class="parch-text">Random Forest · ANN · KNN · Logistic Regression — LR achieved 88.5% accuracy with only a 1.3% train-test gap, confirming strong generalisation.</p>
+      </div>
+      <div class="pstack">
+        <span class="stag">Python</span><span class="stag">Pandas</span><span class="stag">scikit-learn</span><span class="stag">Matplotlib</span><span class="stag">Jupyter</span>
+      </div>
+      <a href="https://github.com/Fatima-Khalidd/Tesla-Stock-Data-Analysis" class="plink" target="_blank">View Repository</a>
+    </div>
+
+    <div class="pcard">
+      <div class="pacc acc-blush"></div>
+      <p class="plabel">CodeFest · ETL Automation</p>
+      <h3 class="ptitle">Data Extraction &amp; Form Automation Bot</h3>
+      <p class="pdesc">A production-grade ETL pipeline that extracts structured data from Google Sheets via OAuth2, transforms field mappings, and auto-populates web forms through Selenium WebDriver across dynamic page states.</p>
+      <div class="pmetrics">
+        <span class="mpill mg">Full ETL Pipeline</span>
+        <span class="mpill mg">OAuth2 Auth</span>
+        <span class="mpill mw">Dynamic Page Handling</span>
+      </div>
+      <div class="parch">
+        <p class="parch-label">Architecture</p>
+        <p class="parch-text">Modular, production-style codebase — Extract / Transform / Load as separate reusable functions, directly transferable to real data engineering workflows.</p>
+      </div>
+      <div class="pstack">
+        <span class="stag">Python</span><span class="stag">Selenium</span><span class="stag">Google Sheets API</span><span class="stag">OAuth2</span>
+      </div>
+      <a href="https://github.com/Fatima-Khalidd/Python-Bot_CodeFest" class="plink" target="_blank">View Repository</a>
+    </div>
+
+    <div class="pcard">
+      <div class="pacc acc-sand"></div>
+      <p class="plabel">Personal Project · Full-Stack</p>
+      <h3 class="ptitle">Fitness Club Full-Stack Application</h3>
+      <p class="pdesc">Full-stack web app migrated from Node.js/Express to Next.js App Router. Features clean MongoDB schema design, a lib/ abstraction layer, REST API routes, and a CI/CD pipeline deployed on Vercel.</p>
+      <div class="pmetrics">
+        <span class="mpill mg">Live on Vercel</span>
+        <span class="mpill mg">CI/CD Pipeline</span>
+        <span class="mpill mw">App Router Architecture</span>
+      </div>
+      <div class="parch">
+        <p class="parch-label">Key Decisions</p>
+        <p class="parch-text">Chose Next.js App Router for improved performance and server components. MongoDB schemas modelled with clean separation from the API layer.</p>
+      </div>
+      <div class="pstack">
+        <span class="stag">Next.js</span><span class="stag">Node.js</span><span class="stag">MongoDB</span><span class="stag">JavaScript</span><span class="stag">Vercel</span>
+      </div>
+      <a href="https://fitness-club-website-next-js.vercel.app" class="plink" target="_blank">View Live Site</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="sec-head">
+    <span class="sec-num">03</span>
+    <h2 class="sec-title">Technical Skills</h2>
+    <div class="sec-line"></div>
+  </div>
+  <div class="skills-layout">
+    <div class="scat">
+      <p class="scat-label">Languages</p>
+      <div class="skill-list">
+        <span class="schip">Python</span><span class="schip">Java</span><span class="schip">SQL</span><span class="schip">JavaScript</span>
+      </div>
+    </div>
+    <div class="scat">
+      <p class="scat-label">ML / Data Science</p>
+      <div class="skill-list">
+        <span class="schip">scikit-learn</span><span class="schip">TensorFlow</span><span class="schip">pandas</span><span class="schip">NumPy</span><span class="schip">Matplotlib</span><span class="schip">Seaborn</span>
+      </div>
+    </div>
+    <div class="scat">
+      <p class="scat-label">Automation</p>
+      <div class="skill-list">
+        <span class="schip">Selenium</span><span class="schip">Google Sheets API</span><span class="schip">n8n</span>
+      </div>
+    </div>
+    <div class="scat">
+      <p class="scat-label">Web &amp; Databases</p>
+      <div class="skill-list">
+        <span class="schip">Next.js</span><span class="schip">Node.js</span><span class="schip">MongoDB</span><span class="schip">MySQL</span>
+      </div>
+    </div>
+    <div class="scat">
+      <p class="scat-label">Tools</p>
+      <div class="skill-list">
+        <span class="schip">Jupyter Notebook</span><span class="schip">Google Colab</span><span class="schip">Git / GitHub</span><span class="schip">VS Code</span><span class="schip">PyCharm</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEADERSHIP -->
+<section id="leadership">
+  <div class="sec-head">
+    <span class="sec-num">04</span>
+    <h2 class="sec-title">Leadership</h2>
+    <div class="sec-line"></div>
+  </div>
+  <div class="lc-grid">
+    <div class="lcard">
+      <h3 class="lorg">COMSATS Films &amp; Dramatic Society</h3>
+      <p class="lrole">Sponsorship Team · Event Management · Treasurer</p>
+      <p class="lperiod">2023 – Present</p>
+      <ul class="lpts">
+        <li>Managed logistics for 2 large-scale university events with 500–600 attendees, coordinating across departments and student services.</li>
+        <li>Led external company outreach, negotiated sponsorship partnerships, and liaised directly with university administration.</li>
+        <li>Served as Treasurer — responsible for event budgeting and financial oversight.</li>
+      </ul>
+    </div>
+    <div class="lcard">
+      <h3 class="lorg">Academic &amp; FYP Team Lead</h3>
+      <p class="lrole">Group Leader · Technical Decision-Making</p>
+      <p class="lperiod">2023 – Present</p>
+      <ul class="lpts">
+        <li>Led teams across 6 academic group projects — task delegation, deadline management, and delivery.</li>
+        <li>Currently Group Leader for Final Year Project (FYP), driving technical direction and team coordination.</li>
+        <li>Proven ability to align cross-functional teams under tight scope and time constraints.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="sec-head">
+    <span class="sec-num">05</span>
+    <h2 class="sec-title">Get In Touch</h2>
+  </div>
+  <p class="c-tagline">Open to DS/ML internship opportunities</p>
+  <p class="c-sub">Whether you have a role in mind, a project to discuss, or just want to connect — I would love to hear from you.</p>
+  <div class="c-links">
+    <a href="https://github.com/Fatima-Khalidd" class="cbtn" target="_blank">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      GitHub
+    </a>
+    <a href="https://linkedin.com/in/fatima-khalid" class="cbtn" target="_blank">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      LinkedIn
+    </a>
+    <a href="https://leetcode.com" class="cbtn" target="_blank">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      LeetCode
+    </a>
+    <a href="tel:+923212964496" class="cbtn">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      +92 321 2964496
+    </a>
+  </div>
+  <a href="mailto:fatimakhalidddd0@gmail.com" class="c-email">fatimakhalidddd0@gmail.com</a>
+</section>
+
+<footer>
+  <span class="ftext">Fatima Khalid · 2025</span>
+  <span class="ftext">Lahore, Pakistan</span>
+</footer>
+
+<script>
+/* ─── CANVAS BACKGROUND ─── */
+(function(){
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles, orbs, mouse={x:0,y:0};
+
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  // Floating soft orbs
+  function makeOrbs(){
+    orbs = [];
+    const colors = [
+      'rgba(107,158,138,',  // sage
+      'rgba(196,154,140,',  // blush
+      'rgba(205,184,150,',  // sand
+      'rgba(154,196,178,',  // sage light
+    ];
+    for(let i=0;i<7;i++){
+      orbs.push({
+        x: Math.random()*W,
+        y: Math.random()*H,
+        r: 140+Math.random()*200,
+        col: colors[Math.floor(Math.random()*colors.length)],
+        vx: (Math.random()-.5)*0.25,
+        vy: (Math.random()-.5)*0.25,
+        pulse: Math.random()*Math.PI*2,
+        pulseSpeed: 0.005+Math.random()*0.008
+      });
+    }
+  }
+
+  // Floating small particles / dots
+  function makeParticles(){
+    particles = [];
+    for(let i=0;i<55;i++){
+      particles.push({
+        x: Math.random()*W,
+        y: Math.random()*H,
+        r: .6+Math.random()*1.8,
+        vx: (Math.random()-.5)*0.3,
+        vy: (Math.random()-.5)*0.3,
+        alpha: .15+Math.random()*.35,
+        connected: []
+      });
+    }
+  }
+
+  function drawOrbs(){
+    orbs.forEach(o=>{
+      o.pulse += o.pulseSpeed;
+      o.x += o.vx; o.y += o.vy;
+      if(o.x<-o.r) o.x=W+o.r;
+      if(o.x>W+o.r) o.x=-o.r;
+      if(o.y<-o.r) o.y=H+o.r;
+      if(o.y>H+o.r) o.y=-o.r;
+      const pulsed = o.r + Math.sin(o.pulse)*12;
+      const g = ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,pulsed);
+      g.addColorStop(0, o.col+'0.07)');
+      g.addColorStop(.5, o.col+'0.04)');
+      g.addColorStop(1, o.col+'0)');
+      ctx.beginPath();
+      ctx.arc(o.x,o.y,pulsed,0,Math.PI*2);
+      ctx.fillStyle=g;
+      ctx.fill();
+    });
+  }
+
+  function drawParticles(){
+    // Move
+    particles.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0) p.x=W; if(p.x>W) p.x=0;
+      if(p.y<0) p.y=H; if(p.y>H) p.y=0;
+    });
+    // Connections
+    for(let i=0;i<particles.length;i++){
+      for(let j=i+1;j<particles.length;j++){
+        const dx=particles[i].x-particles[j].x;
+        const dy=particles[i].y-particles[j].y;
+        const dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<110){
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x,particles[i].y);
+          ctx.lineTo(particles[j].x,particles[j].y);
+          const opacity=(1-dist/110)*0.06;
+          ctx.strokeStyle=`rgba(107,158,138,${opacity})`;
+          ctx.lineWidth=.6;
+          ctx.stroke();
+        }
+      }
+    }
+    // Draw dots
+    particles.forEach(p=>{
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(107,158,138,${p.alpha*0.6})`;
+      ctx.fill();
+    });
+  }
+
+  // Gentle geometric grid in background
+  function drawGrid(){
+    const spacing=70;
+    ctx.strokeStyle='rgba(24,21,15,0.025)';
+    ctx.lineWidth=.5;
+    for(let x=0;x<W;x+=spacing){
+      ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke();
+    }
+    for(let y=0;y<H;y+=spacing){
+      ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+    }
+  }
+
+  // Subtle mouse-following glow
+  function drawMouseGlow(){
+    if(mouse.x===0&&mouse.y===0) return;
+    const g=ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,200);
+    g.addColorStop(0,'rgba(107,158,138,0.04)');
+    g.addColorStop(1,'rgba(107,158,138,0)');
+    ctx.beginPath();
+    ctx.arc(mouse.x,mouse.y,200,0,Math.PI*2);
+    ctx.fillStyle=g;
+    ctx.fill();
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    drawGrid();
+    drawOrbs();
+    drawParticles();
+    drawMouseGlow();
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize',()=>{resize();makeOrbs();makeParticles()});
+  window.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY});
+
+  resize(); makeOrbs(); makeParticles(); draw();
+})();
+
+/* ─── CURSOR ─── */
+const cur=document.getElementById('cur');
+const cur2=document.getElementById('cur2');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function loop(){rx+=(mx-rx)*.13;ry+=(my-ry)*.13;cur2.style.left=rx+'px';cur2.style.top=ry+'px';requestAnimationFrame(loop)})();
+
+/* ─── SCROLL PROGRESS ─── */
+const prog=document.getElementById('prog');
+window.addEventListener('scroll',()=>{
+  prog.style.width=(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100)+'%';
+});
+
+/* ─── INTERSECTION OBSERVER ─── */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      const d=+(e.target.dataset.delay||0);
+      setTimeout(()=>e.target.classList.add('visible'),d*80);
+      obs.unobserve(e.target);
+    }
+  });
+},{threshold:.12,rootMargin:'0px 0px -30px 0px'});
+
+document.querySelectorAll('.pcard,.scat,.lcard,.edu-card').forEach((el,i)=>{
+  el.dataset.delay=i;
+  obs.observe(el);
+});
+</script>
+</body>
+</html>
